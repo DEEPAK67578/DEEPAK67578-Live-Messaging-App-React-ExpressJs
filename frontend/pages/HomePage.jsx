@@ -1,10 +1,10 @@
 import React from 'react'
-import Login from '../components/login'
+import AllUsers from '../components/AllUsers'
 
 function HomePage() {
   return (
     <div>
-      
+      <AllUsers></AllUsers>
     </div>
   )
 }

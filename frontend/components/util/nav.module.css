@@ -1,0 +1,40 @@
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.nav h3 {
+    color: white;
+    font-size: 30px;
+}
+
+.nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ul a {
+    text-decoration: none;
+    margin: 0px 5px;
+    display: block;
+    padding: 10px 15px;
+    background-color: rgb(255, 196, 94);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.564);
+}
+
+.ul a:hover {
+    background-color: rgb(246, 156, 0);
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+}
