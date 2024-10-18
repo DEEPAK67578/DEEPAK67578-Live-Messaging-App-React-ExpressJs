@@ -21,7 +21,6 @@
 
 .wrapper {
     font-family: 'Roboto';
-    height: 60vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -54,4 +53,24 @@
     border-radius: 6px;
     color: white;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.564);
+}
+
+.ImgPick {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    text-align: right;
+    border: 1px solid rgb(142, 142, 142);
+}
+
+.ImgPick p {
+    text-align: center;
+}
+
+.form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: none;
 }
