@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-module.exports.verifyToken = async (req, res) => {
+module.exports.verifyToken = async (req, res,next) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
     return res.status(401).json("Not Authenticated");
@@ -17,7 +17,7 @@ module.exports.verifyToken = async (req, res) => {
   if (!decodedToken) {
     return res.status(401).json("Not Authenticated");
   }
-
-  req.userId = decodedToken.userId;
+  console.log(decodedToken)
+  req.userId = decodedToken.id;
   next();
 };

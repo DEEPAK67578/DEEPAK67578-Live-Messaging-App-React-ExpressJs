@@ -18,6 +18,11 @@
   overflow: hidden;
 }
 
+.information {
+   background-color: rgb(104, 104, 104);
+   padding: 15px;
+   color: white;
+}
 
 .users img {
   height: 100%;

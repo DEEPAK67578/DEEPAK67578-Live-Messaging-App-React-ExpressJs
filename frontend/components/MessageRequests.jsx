@@ -1,6 +1,6 @@
 import React from 'react'
 
-function SendRequest() {
+function MessageRequests() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function SendRequest() {
   )
 }
 
-export default SendRequest
+export default MessageRequests

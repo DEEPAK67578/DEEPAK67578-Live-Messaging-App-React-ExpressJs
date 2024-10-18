@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import Nav from "../components/util/nav";
 import AuthContext from "../context/auth.context";
 import { authCtx } from "../context/auth.context";
-import HomePage, { getAllUsers } from "../pages/HomePage";
+import HomePage, { getAllUsers, requestSend } from "../pages/HomePage";
 import LoginPage, { loginAction } from "../pages/LoginPage";
 import SignupPage, { SignupAction } from "../pages/SignupPage";
 import "./App.css";
@@ -23,12 +23,11 @@ function App() {
         authContext.setToken(false);
       }
       const data = await res.json();
-      console.log(authContext)
       authContext.setLogin(true);
       authContext.setToken(data.token);
     }
     auth();
-  },[authContext]);
+  });
   const route = createBrowserRouter([
     //with createBrowserRouter,Defined routes to render different pages for different routes in Single Page Applications
     {
@@ -52,11 +51,13 @@ function App() {
         },
       ],
     },
+    {
+      path:"/request",action:requestSend
+    }
   ]);
   return (
-    <AuthContext>
+  
       <RouterProvider router={route}></RouterProvider>
-    </AuthContext>
   );
 }
 
