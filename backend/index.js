@@ -1,35 +1,34 @@
-const express = require("express")
-const router = require("./routes/route")
-const app = express()
-const multer = require("multer")
-const path = require("path")
-const mongoose = require('mongoose')
-app.use(express.json())
+const express = require("express");
+const router = require("./routes/route");
+const cookieParser = require("cookie-parser");
+const app = express();
+const cors = require("cors")
+const path = require("path");
+const mongoose = require("mongoose");
+require("dotenv").config();
+app.use(cors())
+app.use(express.json());
+app.use(cookieParser());
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173"); // Replace with your frontend URL
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,PUT,POST,DELETE,UPDATE,OPTIONS"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
+  );
+  res.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
+  next();
+});
 
-const storage = multer.diskStorage({
-    destination:(req,file,cb)=> {
-        cb(null,"userProfiles")
-    },
-    filename:(req,file,cb)=> {
-        cb(null,Date.now() + "-" + file.originalname)
-    }
-})
+app.use("/userProfiles", express.static(path.join(__dirname, "userProfiles")));
 
-const multerStore = multer({storage:storage})
+app.use(router);
 
-
-
-app.use((req,res,next)=> {
-     res.setHeader("Access-Control-Allow-Origin","*")
-     res.setHeader("Access-Control-Allow-Methods","GET,POST,PUT,PATCH","DELETE")
-     res.setHeader("Access-Control-Allow-Header","Content-Type Authorization")
-     next()
-})
-
-app.use(multerStore.single("file"),router)
-
-mongoose.connect("mongodb://localhost:27017/messagingApp").then(()=> {
-    app.listen(3000)
-})
-
+mongoose.connect("mongodb://localhost:27017/messagingApp").then(() => {
+  app.listen(3000);
+});

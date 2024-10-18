@@ -1,23 +1,26 @@
-import React from "react";
+import { useLoaderData } from "react-router";
 import classes from "./AllUsers.module.css";
 function AllUsers() {
+  const allUsers = useLoaderData();
   return (
     <ul className={classes.users}>
-      <li>
-        <div className={classes.usersImage}>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/1200px-User_icon_2.svg.png"></img>
-          <h1>UserName</h1>
-        </div>
-        <p className={classes.description}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus
-          porro aliquid expedita tempore accusantium est, eos autem nobis eum
-          asperiores, libero modi praesentium magni! Ducimus accusantium debitis
-          facere modi maiores?
-        </p>
-        <div className={classes.btn}>
-          <button>Send Request</button>
-        </div>
-      </li>
+      {allUsers.length == 0 && <p>No Users Found</p>}
+      {allUsers.map((val, idx) => {
+        return (
+          <li key={idx}>
+            <div className={classes.usersImage}>
+              <img src={"http://localhost:3000/" + val.imgPath}></img>
+            </div>
+            <div className={classes.info}>
+              <h1>{val.name}</h1>
+              <p className={classes.description}>{val.description}</p>
+              <div className={classes.btn}>
+                <button>Send Request</button>
+              </div>
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 }

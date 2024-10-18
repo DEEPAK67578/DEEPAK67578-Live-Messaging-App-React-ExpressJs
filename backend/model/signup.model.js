@@ -5,7 +5,7 @@ const SignupSchema = new Schema({
     email:String,
     password:String,
     imgPath:String,
-    description:String
+    description:String,
 })
 
 exports.signUpModel = model("signup",SignupSchema)
