@@ -14,6 +14,8 @@ module.exports.verifyToken = async (req, res,next) => {
     return res.status(401).json("Not Authenticated");
   }
 
+  console.log(decodedToken)
+
   if (!decodedToken) {
     return res.status(401).json("Not Authenticated");
   }

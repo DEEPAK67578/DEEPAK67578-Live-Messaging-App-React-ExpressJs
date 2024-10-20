@@ -15,7 +15,7 @@ app.use(cookieParser());
 const messageRouter = require("./routes/messageRoute");
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173"); // Replace with your frontend URL
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Replace with your frontend URL
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",

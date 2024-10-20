@@ -56,23 +56,39 @@ module.exports.getRequestForUser = async (req, res) => {
 
 module.exports.accrejreq = async (req, res) => {
   const { ReqSenderId, handler } = req.body;
+
+ 
+  
+  // if(request.length > 0) {
+  //   return res.status(500).json(request);
+  // }
+
+  console.log(handler)
   try {
     if (handler == "accept") {
+  
       const request = await individualRequestsModal.findOne({
         from: ReqSenderId,
         to: req.userId,
       });
 
-      const chat =new chatsModal({
-        member:[
-          ReqSenderId,req.userId
-        ]
-      })
-
-      await chat.save()
       request.requestState = "accept";
-      const result = await request.save();
-      res.status(200).json(result);
+      await request.save();
+
+      const chats = await chatsModal.find({
+        $or:[{member:[req.userId,ReqSenderId]},{member:[ReqSenderId,req.userId]}]
+      })
+        
+      
+      if(chats.length > 0) {
+        res.status(200).json(result);
+      } else {
+        const chat = new chatsModal({
+          member:[req.userId,ReqSenderId]
+        })
+        const result = await chat.save()
+        res.status(200).json(result);
+      }  
     } else if (handler == "reject") {
       const request = await individualRequestsModal.findOneAndDelete({
         from: ReqSenderId,
