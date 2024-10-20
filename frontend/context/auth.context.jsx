@@ -5,7 +5,9 @@ export const authCtx = createContext()
 function AuthContext(props) {
     const [token,setToken] = useState()
     const [login,setLogin] = useState()
-    return <authCtx.Provider value={{token,setToken,login,setLogin}}>
+    const [name,setName] = useState(null)
+    const [id,setId] = useState(null)
+    return <authCtx.Provider value={{token,setToken,login,setLogin,name,setName,id,setId}}>
         {props.children}
     </authCtx.Provider>
 }

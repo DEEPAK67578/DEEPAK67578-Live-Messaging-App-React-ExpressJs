@@ -1,6 +1,8 @@
 const { signUpModel } = require("../model/signup.model");
+const individualRequestModal = require("../model/individualRequests.modal");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const requestModal = require("../model/request.modal");
 
 module.exports.signUpUser = async (req, res) => {
   const { name, email, password, description } = req.body;
@@ -42,44 +44,65 @@ module.exports.loginUser = async (req, res) => {
   res.status(200).json({ token: token, userId: foundOne.id });
 };
 
-module.exports.getAllUsers = async (req, res,next) => {
+module.exports.getAllUsers = async (req, res, next) => {
   const users = await signUpModel.find({}, { password: 0, email: 0 });
 
-  const authHeader = req.get("Authorization")
-  if(!authHeader) {
-   return res.json(users).status(200);
+  const authHeader = req.get("Authorization");
+  if (!authHeader) {
+    return res.json({ filteredUsers: users }).status(200);
   }
   const token = req.get("Authorization").split(" ")[1];
   let decodedToken;
-    decodedToken = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+  decodedToken = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
 
-  if(!decodedToken) {
+  if (!decodedToken) {
     return res.json(users).status(200);
   }
 
-  const filteredUsers = users.filter((val)=> {
-    return val.id != decodedToken.id
-  })
-  
-  return res.json(filteredUsers).status(200);
+  const filteredUsers = users.filter((val) => {
+    return val.id != decodedToken.id;
+  });
+  const filteredReq = await individualRequestModal.find({
+    from: decodedToken.id,
+    $or: [ { requestState: "Pending" }, { requestState: "accept" }]
+  });
+  return res.json({ filteredUsers, filteredReq }).status(200);
 };
 
-module.exports.verifyUser = async (req, res,next) => {
-  const authHeader = req.get("Authorization")
-  if(!authHeader) {
-    return res.json("Not Authorized").status(401)
+module.exports.verifyUser = async (req, res, next) => {
+  const authHeader = req.get("Authorization");
+  if (!authHeader) {
+    return res.status(401).json("Not Authorized");
   }
   const token = req.get("Authorization").split(" ")[1];
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
   } catch (err) {
-    return res.json("Not Authorized").status(401)
+    return res.status(401).json("Not Authorized").status(401);
   }
 
-  if(!decodedToken) {
-    return res.json("Not Authorized").status(401)
+  if (!decodedToken) {
+    return res.status(401).json("Not Authorized").status(401);
   }
 
-  res.json({id:decodedToken.id,token:token})
+  const userName = await signUpModel.findOne({ _id: decodedToken.id });
+
+  res.json({ name: userName.name, id: decodedToken.id, token: token });
+};
+
+module.exports.getIndividualUser = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const foundUser = await signUpModel.findOne({ _id: id });
+    res
+      .status(200)
+      .json({
+        imgPath: foundUser.imgPath,
+        name: foundUser.name,
+        email: foundUser.email,
+      });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 };

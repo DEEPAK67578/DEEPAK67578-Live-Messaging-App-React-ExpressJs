@@ -1,33 +1,17 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect,useState } from "react";
 import Nav from "../components/util/nav";
-import AuthContext from "../context/auth.context";
 import { authCtx } from "../context/auth.context";
 import HomePage, { getAllUsers, requestSend } from "../pages/HomePage";
 import LoginPage, { loginAction } from "../pages/LoginPage";
 import SignupPage, { SignupAction } from "../pages/SignupPage";
 import "./App.css";
+import MessageRequest, { getAllReqForUser } from "../pages/MessageRequest";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-function App() {
-  const authContext = useContext(authCtx);
+import Chat from "../pages/Chat";
 
-  useEffect(() => {
-    async function auth() {
-      const res = await fetch("http://localhost:3000/verifyToken", {
-        headers: {
-          authorization: `bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      if (res.status == 403 || res.status == 401) {
-        localStorage.clear()
-        authContext.setLogin(false);
-        authContext.setToken(false);
-      }
-      const data = await res.json();
-      authContext.setLogin(true);
-      authContext.setToken(data.token);
-    }
-    auth();
-  });
+
+function App() {
+
   const route = createBrowserRouter([
     //with createBrowserRouter,Defined routes to render different pages for different routes in Single Page Applications
     {
@@ -49,16 +33,24 @@ function App() {
           element: <SignupPage></SignupPage>,
           action: SignupAction,
         },
+        {
+          path: "messagerequest",
+          element: <MessageRequest></MessageRequest>,
+          loader:getAllReqForUser
+        },
+
+        {
+          path: "chat",
+          element: <Chat></Chat>
+        },
       ],
     },
     {
-      path:"/request",action:requestSend
-    }
+      path: "/request",
+      action: requestSend,
+    },
   ]);
-  return (
-  
-      <RouterProvider router={route}></RouterProvider>
-  );
+  return <RouterProvider router={route}></RouterProvider>;
 }
 
 export default App;

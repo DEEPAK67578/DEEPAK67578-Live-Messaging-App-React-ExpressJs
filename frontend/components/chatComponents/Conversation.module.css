@@ -1,0 +1,12 @@
+.convo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.convo div {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    margin: 10px;
+}

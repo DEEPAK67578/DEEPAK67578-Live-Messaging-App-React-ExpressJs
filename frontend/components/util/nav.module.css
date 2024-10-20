@@ -1,7 +1,7 @@
 .nav {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .nav h3 {
@@ -18,7 +18,8 @@
     justify-content: center;
 }
 
-.ul a {
+.ul a,button {
+    font-size: 16px;
     text-decoration: none;
     margin: 0px 5px;
     display: block;
@@ -37,4 +38,10 @@
 .nav a {
     color: white;
     text-decoration: none;
+}
+
+.name {
+    margin-right: 20px;
+    color: white;
+    text-align: center;
 }

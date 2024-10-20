@@ -8,13 +8,26 @@ function AllUsers() {
   const [sendInfo, setSendInfo] = useState(false);
   const allUsers = useLoaderData();
   const authContext = useContext(authCtx);
+  authContext.login && allUsers.filteredReq.forEach((req) => {
+    allUsers.filteredUsers.forEach((val, idx) => {
+      if (req.to == val._id) {
+        allUsers.filteredUsers[idx].requestState = req.requestState;
+      }
+    });
+  });
+
+  console.log(allUsers.filteredUsers, allUsers.filteredReq);
 
   useEffect(() => {
     setSendInfo(true);
-    setTimeout(() => {
+    const timerId = setTimeout(() => {
       setSendInfo(false);
     }, 3000);
-  },[state]);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [state]);
 
   return (
     <>
@@ -22,8 +35,8 @@ function AllUsers() {
         <p className={classes.information}>{data}</p>
       )}
       <ul className={classes.users}>
-        {allUsers.length == 0 && <p>No Users Found</p>}
-        {allUsers.map((val, idx) => {
+        {allUsers.filteredUsers.length == 0 && <p>No Users Found</p>}
+        {allUsers.filteredUsers.map((val, idx) => {
           return (
             <li key={idx}>
               <div className={classes.usersImage}>
@@ -33,18 +46,23 @@ function AllUsers() {
                 <h1>{val.name}</h1>
                 <p className={classes.description}>{val.description}</p>
                 <div className={classes.btn}>
-                  {authContext && (
+                  {authContext.login && (
                     <Form method="POST" action="/request">
                       {state == "idle" && (
                         <input type="hidden" name="id" value={val._id}></input>
                       )}
-                      {state == "idle" && <button>Send Request</button>}
+                      {state == "idle" && val.requestState && (
+                        <button disabled={true} style={{backgroundColor:`${val.requestState == "accept" ? "green" : "gray"}`}}>{val.requestState == "accept" ? "Accepted" : "Pending"} </button>
+                      )}
+                      {state == "idle" && !val.requestState && (
+                        <button>Send Request</button>
+                      )}
                       {state == "submitting" && (
                         <button>Sending Request...</button>
                       )}
                     </Form>
                   )}
-                  {!authContext && <p>Login to Request</p>}
+                  {!authContext.login && <p>Login to Request</p>}
                 </div>
               </div>
             </li>
